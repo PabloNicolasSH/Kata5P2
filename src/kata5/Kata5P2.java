@@ -1,15 +1,22 @@
 package kata5;
 
-import kata5.loader.impl.FileLoader;
-import kata5.loader.impl.MailLoader;
+import java.util.List;
 
-import java.io.File;
+import kata5.model.Histogram;
+import kata5.model.Mail;
+import kata5.view.HistogramDisplay;
+import kata5.view.MailHistogramBuilder;
+import kata5.view.MailListReaderDB;
 
 public class Kata5P2 {
 
     public static void main(String[] args) {
-        Iterable<String> items = new MailLoader(new FileLoader(new File("email.txt"))).items();
-        for (String mail : items) System.out.println(mail);
+        MailListReaderDB mailListReader = new MailListReaderDB("jdbc:sqlite:kata5P1.db");
+        List<Mail> mailList = mailListReader.read();
+        MailHistogramBuilder mailHistogramBuilder = new MailHistogramBuilder();
+        Histogram<String> histogram = mailHistogramBuilder.build(mailList);
+        new HistogramDisplay(histogram).execute();
+
     }
 
 }
